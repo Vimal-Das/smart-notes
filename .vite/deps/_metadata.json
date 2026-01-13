@@ -1,0 +1,127 @@
+{
+  "hash": "8e2e14e6",
+  "configHash": "18c52b45",
+  "lockfileHash": "ce13f21c",
+  "browserHash": "a64504ea",
+  "optimized": {
+    "react/jsx-dev-runtime": {
+      "src": "../../node_modules/react/jsx-dev-runtime.js",
+      "file": "react_jsx-dev-runtime.js",
+      "fileHash": "470dc483",
+      "needsInterop": true
+    },
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "e4d578d7",
+      "needsInterop": true
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "442ada57",
+      "needsInterop": true
+    },
+    "react-router-dom": {
+      "src": "../../node_modules/react-router-dom/dist/index.mjs",
+      "file": "react-router-dom.js",
+      "fileHash": "2861294f",
+      "needsInterop": false
+    },
+    "dexie-react-hooks": {
+      "src": "../../node_modules/dexie-react-hooks/dist/dexie-react-hooks.mjs",
+      "file": "dexie-react-hooks.js",
+      "fileHash": "cebcad85",
+      "needsInterop": false
+    },
+    "lucide-react": {
+      "src": "../../node_modules/lucide-react/dist/esm/lucide-react.js",
+      "file": "lucide-react.js",
+      "fileHash": "123ffcd2",
+      "needsInterop": false
+    },
+    "react-force-graph-2d": {
+      "src": "../../node_modules/react-force-graph-2d/dist/react-force-graph-2d.mjs",
+      "file": "react-force-graph-2d.js",
+      "fileHash": "f4bd7ce8",
+      "needsInterop": false
+    },
+    "dexie": {
+      "src": "../../node_modules/dexie/import-wrapper.mjs",
+      "file": "dexie.js",
+      "fileHash": "f8d3d894",
+      "needsInterop": false
+    },
+    "clsx": {
+      "src": "../../node_modules/clsx/dist/clsx.mjs",
+      "file": "clsx.js",
+      "fileHash": "0b7cb522",
+      "needsInterop": false
+    },
+    "tailwind-merge": {
+      "src": "../../node_modules/tailwind-merge/dist/bundle-mjs.mjs",
+      "file": "tailwind-merge.js",
+      "fileHash": "34611242",
+      "needsInterop": false
+    },
+    "react-markdown": {
+      "src": "../../node_modules/react-markdown/index.js",
+      "file": "react-markdown.js",
+      "fileHash": "10c82c9b",
+      "needsInterop": false
+    },
+    "remark-gfm": {
+      "src": "../../node_modules/remark-gfm/index.js",
+      "file": "remark-gfm.js",
+      "fileHash": "2e156380",
+      "needsInterop": false
+    },
+    "@uiw/react-codemirror": {
+      "src": "../../node_modules/@uiw/react-codemirror/esm/index.js",
+      "file": "@uiw_react-codemirror.js",
+      "fileHash": "beae22f1",
+      "needsInterop": false
+    },
+    "@codemirror/lang-markdown": {
+      "src": "../../node_modules/@codemirror/lang-markdown/dist/index.js",
+      "file": "@codemirror_lang-markdown.js",
+      "fileHash": "7fd4e673",
+      "needsInterop": false
+    },
+    "@codemirror/theme-one-dark": {
+      "src": "../../node_modules/@codemirror/theme-one-dark/dist/index.js",
+      "file": "@codemirror_theme-one-dark.js",
+      "fileHash": "0dcb6eb2",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-VXREUZQN": {
+      "file": "chunk-VXREUZQN.js"
+    },
+    "chunk-XLTDOGXH": {
+      "file": "chunk-XLTDOGXH.js"
+    },
+    "chunk-JBU6HCGV": {
+      "file": "chunk-JBU6HCGV.js"
+    },
+    "chunk-ZMNXHV6V": {
+      "file": "chunk-ZMNXHV6V.js"
+    },
+    "chunk-PSDMEFR7": {
+      "file": "chunk-PSDMEFR7.js"
+    },
+    "chunk-5SKJYJKN": {
+      "file": "chunk-5SKJYJKN.js"
+    },
+    "chunk-R3E4LXVO": {
+      "file": "chunk-R3E4LXVO.js"
+    },
+    "chunk-P6RTVJOB": {
+      "file": "chunk-P6RTVJOB.js"
+    },
+    "chunk-G3PMV62Z": {
+      "file": "chunk-G3PMV62Z.js"
+    }
+  }
+}
