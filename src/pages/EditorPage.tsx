@@ -7,6 +7,8 @@ import { EditorToolbar } from '../components/EditorToolbar';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useTabs } from '../context/TabContext';
+import { useAuth } from '../context/AuthContext';
+import { SyncService } from '../services/SyncService';
 
 export function EditorPage() {
     const { id } = useParams<{ id: string }>();
@@ -16,6 +18,7 @@ export function EditorPage() {
     const [isSaving, setIsSaving] = useState(false);
     const [viewMode, setViewMode] = useState<'edit' | 'preview'>('edit');
     const editorRef = useRef<EditorHandle>(null);
+    const { user, guestId } = useAuth();
 
     const originalTitleRef = useRef<string>('');
 
@@ -49,8 +52,12 @@ export function EditorPage() {
             title: newTitle,
             updatedAt: Date.now()
         });
+
+        // Trigger Cloud Sync
+        SyncService.sync(user, guestId);
+
         setIsSaving(false);
-    }, [id]);
+    }, [id, user, guestId]);
 
     useEffect(() => {
         const timer = setTimeout(() => {

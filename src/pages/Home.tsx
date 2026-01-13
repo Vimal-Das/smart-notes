@@ -1,15 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '../db/db';
 import { Link } from 'react-router-dom';
-import { FileText, Plus } from 'lucide-react';
+import { Plus, FileText } from 'lucide-react';
 import { useTabs } from '../context/TabContext';
+import { useAuth } from '../context/AuthContext';
+import { SyncService } from '../services/SyncService';
 
 export function Home() {
     const { openTab } = useTabs();
+    const { user, guestId } = useAuth();
+
     const recentNotes = useLiveQuery(
         () => db.notes.orderBy('updatedAt').reverse().limit(10).toArray()
     );
+
+    useEffect(() => {
+        SyncService.sync(user, guestId);
+    }, [user, guestId]);
 
     const createNote = async () => {
         const id = crypto.randomUUID();

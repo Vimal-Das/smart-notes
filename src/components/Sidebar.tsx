@@ -2,13 +2,16 @@ import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '../db/db';
-import { FileText, Search, Settings, Plus, Network } from 'lucide-react';
+import { FileText, Search, Settings, Plus, Network, LogOut, User as UserIcon } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { useTabs } from '../context/TabContext';
+import { useAuth } from '../context/AuthContext';
+import { SyncService } from '../services/SyncService';
 
 export function Sidebar() {
     const navigate = useNavigate();
     const { openTab } = useTabs();
+    const { user, guestId, logout } = useAuth();
     const notes = useLiveQuery(() => db.notes.orderBy('updatedAt').reverse().toArray());
 
     const createNote = async () => {
@@ -21,8 +24,14 @@ export function Sidebar() {
             updatedAt: Date.now(),
             isEncrypted: false
         });
+        SyncService.sync(user, guestId);
         openTab(id);
         navigate(`/note/${id}`);
+    };
+
+    const handleLogout = () => {
+        logout();
+        navigate('/login');
     };
 
     return (
@@ -95,6 +104,31 @@ export function Sidebar() {
                     <span>Search</span>
                 </NavLink>
             </div>
+
+            {/* User Profile Section */}
+            <div className="p-3 border-t bg-muted/20">
+                <div className="flex items-center gap-3 mb-2 px-1">
+                    <div className="w-8 h-8 rounded-full overflow-hidden bg-primary/10 flex items-center justify-center shrink-0 border">
+                        {user?.picture ? (
+                            <img src={user.picture} alt={user.name} className="w-full h-full object-cover" />
+                        ) : (
+                            <UserIcon size={16} className="text-primary" />
+                        )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium truncate">{user?.name || 'User'}</p>
+                        <p className="text-[10px] text-muted-foreground truncate">{user?.email}</p>
+                    </div>
+                </div>
+                <button
+                    onClick={handleLogout}
+                    className="w-full flex items-center gap-2 px-2 py-1.5 text-xs text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded transition-colors mt-1"
+                >
+                    <LogOut size={14} />
+                    <span>Sign Out</span>
+                </button>
+            </div>
         </div>
     );
 }
+
