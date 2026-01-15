@@ -6,6 +6,7 @@ import { Home } from './pages/Home';
 import { EditorPage } from './pages/EditorPage';
 import { GraphPage } from './pages/GraphPage';
 import { LoginPage } from './pages/LoginPage';
+import { SearchPage } from './pages/SearchPage';
 import { TabProvider } from './context/TabContext';
 import { AuthProvider, ProtectedRoute } from './context/AuthContext';
 
@@ -26,7 +27,7 @@ function App() {
               }>
                 <Route path="/" element={<Home />} />
                 <Route path="/note/:id" element={<EditorPage />} />
-                <Route path="/search" element={<div className="p-10">Search View (Coming Soon)</div>} />
+                <Route path="/search" element={<SearchPage />} />
                 <Route path="/graph" element={<GraphPage />} />
               </Route>
             </Routes>

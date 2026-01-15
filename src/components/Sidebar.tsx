@@ -95,6 +95,7 @@ export function Sidebar() {
                 </NavLink>
                 <NavLink
                     to="/search"
+                    onClick={() => openTab('search')}
                     className={({ isActive }) => cn(
                         "flex items-center gap-2 px-3 py-2 rounded-md transition-colors text-sm",
                         isActive ? "bg-accent text-accent-foreground" : "text-muted-foreground hover:bg-muted hover:text-foreground"
