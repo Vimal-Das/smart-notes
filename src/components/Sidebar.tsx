@@ -6,12 +6,12 @@ import { FileText, Search, Settings, Plus, Network, LogOut, User as UserIcon } f
 import { cn } from '../lib/utils';
 import { useTabs } from '../context/TabContext';
 import { useAuth } from '../context/AuthContext';
-import { SyncService } from '../services/SyncService';
+import { FirebaseSyncService } from '../services/FirebaseSyncService';
 
 export function Sidebar() {
     const navigate = useNavigate();
     const { openTab } = useTabs();
-    const { user, guestId, logout } = useAuth();
+    const { user, logout } = useAuth();
     const notes = useLiveQuery(() => db.notes.orderBy('updatedAt').reverse().toArray());
 
     const createNote = async () => {
@@ -21,10 +21,10 @@ export function Sidebar() {
             title: 'Untitled Note',
             content: '',
             createdAt: Date.now(),
-            updatedAt: Date.now(),
+            updatedAt: new Date().toISOString(),
             isEncrypted: false
         });
-        SyncService.sync(user, guestId);
+        FirebaseSyncService.sync(user);
         openTab(id);
         navigate(`/note/${id}`);
     };
@@ -117,8 +117,8 @@ export function Sidebar() {
                         )}
                     </div>
                     <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium truncate">{user?.name || 'User'}</p>
-                        <p className="text-[10px] text-muted-foreground truncate">{user?.email}</p>
+                        <p className="text-sm font-medium truncate">{user?.name || 'Guest User'}</p>
+                        <p className="text-[10px] text-muted-foreground truncate">{user?.email || 'Local Only'}</p>
                     </div>
                 </div>
                 <button
@@ -126,7 +126,7 @@ export function Sidebar() {
                     className="w-full flex items-center gap-2 px-2 py-1.5 text-xs text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded transition-colors mt-1"
                 >
                     <LogOut size={14} />
-                    <span>Sign Out</span>
+                    <span>{user ? 'Sign Out' : 'Exit Guest Mode'}</span>
                 </button>
             </div>
         </div>

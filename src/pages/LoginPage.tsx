@@ -1,40 +1,22 @@
 import React from 'react';
-import { GoogleLogin } from '@react-oauth/google';
-import { jwtDecode } from 'jwt-decode';
-import { useAuth } from '../context/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { LogIn, NotebookPen } from 'lucide-react';
+import { firebaseAuth } from '../services/firebaseAuth';
+import { useAuth } from '../context/AuthContext';
 
 export function LoginPage() {
-    const { login } = useAuth();
+    const { loginGuest } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
     const from = (location.state as any)?.from?.pathname || "/";
 
-    const handleGoogleSuccess = (credentialResponse: any) => {
-        const decoded: any = jwtDecode(credentialResponse.credential);
-        const user = {
-            id: decoded.sub,
-            name: decoded.name,
-            email: decoded.email,
-            picture: decoded.picture,
-            provider: 'google' as const,
-            token: credentialResponse.credential
-        };
-        login(user);
-        navigate(from, { replace: true });
-    };
-
-    const handleDemoLogin = () => {
-        const demoUser = {
-            id: 'demo-user-123',
-            name: 'Demo User',
-            email: 'demo@example.com',
-            picture: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix',
-            provider: 'google' as const
-        };
-        login(demoUser);
-        navigate(from, { replace: true });
+    const handleGoogleLogin = async () => {
+        try {
+            await firebaseAuth.login();
+            navigate(from, { replace: true });
+        } catch (error) {
+            console.error('Login Failed:', error);
+        }
     };
 
     return (
@@ -46,18 +28,18 @@ export function LoginPage() {
                     </div>
                     <h1 className="text-2xl font-bold tracking-tight">Welcome to Notes Manager</h1>
                     <p className="text-sm text-muted-foreground">
-                        Sign in to sync your notes across devices
+                        Sign in to sync your notes across devices securely with Firebase
                     </p>
                 </div>
 
                 <div className="space-y-4 pt-4">
-                    <div className="flex justify-center">
-                        <GoogleLogin
-                            onSuccess={handleGoogleSuccess}
-                            onError={() => console.log('Login Failed')}
-                            useOneTap
-                        />
-                    </div>
+                    <button
+                        onClick={handleGoogleLogin}
+                        className="w-full flex items-center justify-center gap-3 px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors text-sm font-medium shadow-sm"
+                    >
+                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-5 h-5" />
+                        <span>Sign in with Google</span>
+                    </button>
 
                     <div className="relative">
                         <div className="absolute inset-0 flex items-center">
@@ -69,7 +51,10 @@ export function LoginPage() {
                     </div>
 
                     <button
-                        onClick={handleDemoLogin}
+                        onClick={() => {
+                            loginGuest();
+                            navigate(from, { replace: true });
+                        }}
                         className="w-full flex items-center justify-center gap-2 px-4 py-2 border rounded-md hover:bg-muted transition-colors text-sm font-medium"
                     >
                         <LogIn size={16} />
@@ -78,7 +63,7 @@ export function LoginPage() {
                 </div>
 
                 <p className="text-center text-xs text-muted-foreground pt-4">
-                    By signing in, you agree to our Terms of Service and Privacy Policy.
+                    Your notes are synced to Firestore with client-side encryption support.
                 </p>
             </div>
         </div>

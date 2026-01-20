@@ -8,7 +8,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useTabs } from '../context/TabContext';
 import { useAuth } from '../context/AuthContext';
-import { SyncService } from '../services/SyncService';
+import { FirebaseSyncService } from '../services/FirebaseSyncService';
 
 export function EditorPage() {
     const { id } = useParams<{ id: string }>();
@@ -18,7 +18,7 @@ export function EditorPage() {
     const [isSaving, setIsSaving] = useState(false);
     const [viewMode, setViewMode] = useState<'edit' | 'preview'>('edit');
     const editorRef = useRef<EditorHandle>(null);
-    const { user, guestId } = useAuth();
+    const { user } = useAuth();
 
     const originalTitleRef = useRef<string>('');
 
@@ -47,17 +47,18 @@ export function EditorPage() {
             originalTitleRef.current = newTitle;
         }
 
+        const updatedAt = new Date().toISOString();
         await db.notes.update(id, {
             content: newContent,
             title: newTitle,
-            updatedAt: Date.now()
+            updatedAt: updatedAt as any // Handling potential Dexie type mismatch during migration
         });
 
         // Trigger Cloud Sync
-        SyncService.sync(user, guestId);
+        FirebaseSyncService.sync(user);
 
         setIsSaving(false);
-    }, [id, user, guestId]);
+    }, [id, user]);
 
     useEffect(() => {
         const timer = setTimeout(() => {

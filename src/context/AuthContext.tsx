@@ -1,32 +1,25 @@
 import React, { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
-import type { User } from '../services/auth';
+import type { User } from '../types';
+import { firebaseAuth } from '../services/firebaseAuth';
 
 interface AuthContextType {
     user: User | null;
+    isGuest: boolean;
     guestId: string | null;
     isLoading: boolean;
-    login: (user: User) => void;
-    logout: () => void;
+    loginGuest: () => void;
+    logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
+    const [isGuest, setIsGuest] = useState(false);
     const [guestId, setGuestId] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        // Check for stored user
-        const storedUser = localStorage.getItem('notes_user');
-        if (storedUser) {
-            try {
-                setUser(JSON.parse(storedUser));
-            } catch (e) {
-                console.error('Failed to parse stored user', e);
-            }
-        }
-
         // Handle Guest ID
         let gid = localStorage.getItem('notes_guest_id');
         if (!gid) {
@@ -35,22 +28,38 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
         setGuestId(gid);
 
-        setIsLoading(false);
+        // Check if was previously a guest
+        const wasGuest = localStorage.getItem('notes_is_guest') === 'true';
+
+        // Listen for Firebase Auth changes
+        const unsubscribe = firebaseAuth.onAuthChange((fbUser) => {
+            if (fbUser) {
+                setUser(fbUser);
+                setIsGuest(false);
+                localStorage.removeItem('notes_is_guest');
+            } else if (wasGuest) {
+                setIsGuest(true);
+            }
+            setIsLoading(false);
+        });
+
+        return () => unsubscribe();
     }, []);
 
-    const login = (newUser: User) => {
-        setUser(newUser);
-        localStorage.setItem('notes_user', JSON.stringify(newUser));
+    const loginGuest = () => {
+        setIsGuest(true);
+        localStorage.setItem('notes_is_guest', 'true');
     };
 
-    const logout = () => {
+    const logout = async () => {
+        await firebaseAuth.logout();
         setUser(null);
-        localStorage.removeItem('notes_user');
-        // Also clear any other session data if needed
+        setIsGuest(false);
+        localStorage.removeItem('notes_is_guest');
     };
 
     return (
-        <AuthContext.Provider value={{ user, guestId, isLoading, login, logout }}>
+        <AuthContext.Provider value={{ user, isGuest, guestId, isLoading, loginGuest, logout }}>
             {children}
         </AuthContext.Provider>
     );
@@ -68,14 +77,14 @@ export function useAuth() {
 import { Navigate, useLocation } from 'react-router-dom';
 
 export function ProtectedRoute({ children }: { children: ReactNode }) {
-    const { user, isLoading } = useAuth();
+    const { user, isGuest, isLoading } = useAuth();
     const location = useLocation();
 
     if (isLoading) {
         return <div className="h-screen w-screen flex items-center justify-center">Loading session...</div>;
     }
 
-    if (!user) {
+    if (!user && !isGuest) {
         return <Navigate to="/login" state={{ from: location }} replace />;
     }
 

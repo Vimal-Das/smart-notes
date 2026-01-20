@@ -5,19 +5,19 @@ import { Link } from 'react-router-dom';
 import { Plus, FileText } from 'lucide-react';
 import { useTabs } from '../context/TabContext';
 import { useAuth } from '../context/AuthContext';
-import { SyncService } from '../services/SyncService';
+import { FirebaseSyncService } from '../services/FirebaseSyncService';
 
 export function Home() {
     const { openTab } = useTabs();
-    const { user, guestId } = useAuth();
+    const { user } = useAuth();
 
     const recentNotes = useLiveQuery(
         () => db.notes.orderBy('updatedAt').reverse().limit(10).toArray()
     );
 
     useEffect(() => {
-        SyncService.sync(user, guestId);
-    }, [user, guestId]);
+        FirebaseSyncService.sync(user);
+    }, [user]);
 
     const createNote = async () => {
         const id = crypto.randomUUID();
@@ -26,7 +26,7 @@ export function Home() {
             title: 'Untitled Note',
             content: '',
             createdAt: Date.now(),
-            updatedAt: Date.now(),
+            updatedAt: new Date().toISOString(),
             isEncrypted: false
         });
         openTab(id);

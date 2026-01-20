@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { GoogleOAuthProvider } from '@react-oauth/google';
 import { Layout } from './components/Layout';
 import { Home } from './pages/Home';
 import { EditorPage } from './pages/EditorPage';
@@ -10,31 +9,27 @@ import { SearchPage } from './pages/SearchPage';
 import { TabProvider } from './context/TabContext';
 import { AuthProvider, ProtectedRoute } from './context/AuthContext';
 
-const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-
 function App() {
   return (
-    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-      <AuthProvider>
-        <TabProvider>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/login" element={<LoginPage />} />
-              <Route element={
-                <ProtectedRoute>
-                  <Layout />
-                </ProtectedRoute>
-              }>
-                <Route path="/" element={<Home />} />
-                <Route path="/note/:id" element={<EditorPage />} />
-                <Route path="/search" element={<SearchPage />} />
-                <Route path="/graph" element={<GraphPage />} />
-              </Route>
-            </Routes>
-          </BrowserRouter>
-        </TabProvider>
-      </AuthProvider>
-    </GoogleOAuthProvider>
+    <AuthProvider>
+      <TabProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route element={
+              <ProtectedRoute>
+                <Layout />
+              </ProtectedRoute>
+            }>
+              <Route path="/" element={<Home />} />
+              <Route path="/note/:id" element={<EditorPage />} />
+              <Route path="/search" element={<SearchPage />} />
+              <Route path="/graph" element={<GraphPage />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </TabProvider>
+    </AuthProvider>
   );
 }
 
