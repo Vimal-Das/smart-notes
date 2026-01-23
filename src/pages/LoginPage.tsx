@@ -64,6 +64,13 @@ export function LoginPage() {
 
                 <p className="text-center text-xs text-muted-foreground pt-4">
                     Your notes are synced to Firestore with client-side encryption support.
+                    <br />
+                    <button
+                        onClick={() => navigate('/landing')}
+                        className="mt-2 text-primary hover:underline"
+                    >
+                        Learn more about features
+                    </button>
                 </p>
             </div>
         </div>

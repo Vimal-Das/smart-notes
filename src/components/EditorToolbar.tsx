@@ -43,9 +43,9 @@ export function EditorToolbar({
     ];
 
     return (
-        <div className="relative flex items-center gap-2 p-1.5 border-b bg-muted/40 h-11">
-            {/* Formatting Tools */}
-            <div className="flex items-center gap-0.5 shrink-0">
+        <div className="relative flex items-center gap-2 p-1.5 border-b bg-muted/40 h-11 min-w-0">
+            {/* Formatting Tools - Scrollable on Mobile */}
+            <div className="flex items-center gap-0.5 shrink-0 overflow-x-auto scrollbar-none max-w-[40%] md:max-w-none">
                 {tools.map((tool, i) => (
                     <button
                         key={i}

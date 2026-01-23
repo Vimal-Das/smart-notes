@@ -35,7 +35,7 @@ export function Sidebar() {
     };
 
     return (
-        <div className="w-64 h-screen bg-secondary/30 border-r flex flex-col shrink-0">
+        <div className="w-full h-full bg-secondary/30 border-r flex flex-col shrink-0">
             <div className="p-4 border-b flex items-center justify-between">
                 <h1 className="font-bold text-lg">My Vault</h1>
                 <button className="p-1 hover:bg-muted rounded text-muted-foreground hover:text-foreground transition-colors">
