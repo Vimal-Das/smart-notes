@@ -18,7 +18,7 @@ export function TabBar() {
     if (openNoteIds.length === 0) return null;
 
     return (
-        <div className="flex bg-secondary/20 border-b overflow-x-auto scrollbar-hide">
+        <div className="flex bg-secondary/20 overflow-x-auto scrollbar-hide">
             {openNoteIds.map(id => {
                 const isActive = activeNoteId === id;
 

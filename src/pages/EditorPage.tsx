@@ -106,7 +106,7 @@ export function EditorPage() {
                 onTitleChange={(newTitle) => setTitle(newTitle)}
             />
 
-            <div className="flex-1 overflow-auto bg-background scrollbar-thin flex flex-col pt-4">
+            <div className="flex-1 overflow-auto bg-background scrollbar-thin flex flex-col pt-4 pb-24 md:pb-4">
                 <div className="flex-1 w-full px-4">
                     {viewMode === 'edit' ? (
                         <Editor

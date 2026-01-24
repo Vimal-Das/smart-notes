@@ -22,19 +22,6 @@ export function Layout() {
 
     return (
         <div className="flex h-screen w-full bg-background text-foreground overflow-hidden">
-            {/* Mobile Header */}
-            <div className="md:hidden fixed top-0 left-0 right-0 h-14 border-b bg-background/80 backdrop-blur-md z-40 flex items-center px-4 justify-between">
-                <div className="flex items-center gap-2">
-                    <button
-                        onClick={() => setIsSidebarOpen(true)}
-                        className="p-2 hover:bg-muted rounded-md text-muted-foreground"
-                    >
-                        <Menu size={20} />
-                    </button>
-                    <span className="font-bold text-sm tracking-tight">Notes Manager</span>
-                </div>
-            </div>
-
             {/* Sidebar with mobile overlay logic */}
             <div className={cn(
                 "fixed inset-0 z-50 md:relative md:z-0 transition-opacity duration-300 md:opacity-100 md:visible md:h-full",
@@ -63,8 +50,18 @@ export function Layout() {
                 </div>
             </div>
 
-            <div className="flex-1 flex flex-col min-w-0 pt-14 md:pt-0">
-                <TabBar />
+            <div className="flex-1 flex flex-col min-w-0">
+                <div className="flex items-center border-b bg-secondary/10">
+                    <button
+                        onClick={() => setIsSidebarOpen(true)}
+                        className="md:hidden p-3 pl-4 text-muted-foreground hover:text-foreground"
+                    >
+                        <Menu size={20} />
+                    </button>
+                    <div className="flex-1 overflow-hidden">
+                        <TabBar />
+                    </div>
+                </div>
                 <main className="flex-1 overflow-hidden relative">
                     <Outlet />
                 </main>
