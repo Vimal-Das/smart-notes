@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '../db/db';
 import { Editor, type EditorHandle } from '../components/Editor';
@@ -12,6 +12,7 @@ import { FirebaseSyncService } from '../services/FirebaseSyncService';
 
 export function EditorPage() {
     const { id } = useParams<{ id: string }>();
+    const navigate = useNavigate();
     const note = useLiveQuery(() => id ? db.notes.get(id) : undefined, [id]);
     const [content, setContent] = useState('');
     const [title, setTitle] = useState('');
@@ -74,6 +75,10 @@ export function EditorPage() {
         editorRef.current?.insertText(text, offset);
     };
 
+    const handleWrap = (prefix: string, suffix: string, placeholder?: string) => {
+        editorRef.current?.wrapSelection(prefix, suffix, placeholder);
+    };
+
     if (!id) return <div className="p-8 text-muted-foreground">Select a note to start editing</div>;
     if (!note) return <div className="p-8">Loading...</div>;
 
@@ -99,6 +104,7 @@ export function EditorPage() {
         <div className="flex flex-col h-full bg-background min-w-0">
             <EditorToolbar
                 onInsert={handleInsert}
+                onWrap={handleWrap}
                 viewMode={viewMode}
                 setViewMode={setViewMode}
                 isSaving={isSaving}
@@ -132,7 +138,7 @@ export function EditorPage() {
 }
 
 function WikiLink({ title }: { title: string }) {
-    const { openTab } = useTabs();
+    const navigate = useNavigate();
     const note = useLiveQuery(() => db.notes.where('title').equals(title).first(), [title]);
 
     if (!note) {
@@ -141,7 +147,7 @@ function WikiLink({ title }: { title: string }) {
 
     return (
         <button
-            onClick={() => openTab(note.id)}
+            onClick={() => navigate(`/note/${note.id}`)}
             className="text-primary hover:underline font-medium inline-block"
         >
             {title}

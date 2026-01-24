@@ -4,9 +4,21 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '../db/db';
 import { X, FileText, Network, Search } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { useNavigate } from 'react-router-dom';
 
 export function TabBar() {
-    const { openNoteIds, activeNoteId, setActiveTab, closeTab } = useTabs();
+    const { openNoteIds, activeNoteId, closeTab } = useTabs();
+    const navigate = useNavigate();
+
+    const handleTabClick = (id: string) => {
+        if (id === 'graph') {
+            navigate('/graph');
+        } else if (id === 'search') {
+            navigate('/search');
+        } else {
+            navigate(`/note/${id}`);
+        }
+    };
 
     // Fetch titles for all open note tabs (exclude special IDs)
     const noteIds = openNoteIds.filter(id => id !== 'graph' && id !== 'search');
@@ -26,7 +38,7 @@ export function TabBar() {
                     return (
                         <div
                             key={id}
-                            onClick={() => setActiveTab(id)}
+                            onClick={() => handleTabClick(id)}
                             className={cn(
                                 "group flex items-center min-w-[120px] max-w-[200px] px-3 py-2 text-sm border-r cursor-pointer transition-colors relative transition-all",
                                 isActive
@@ -53,7 +65,7 @@ export function TabBar() {
                     return (
                         <div
                             key={id}
-                            onClick={() => setActiveTab(id)}
+                            onClick={() => handleTabClick(id)}
                             className={cn(
                                 "group flex items-center min-w-[120px] max-w-[200px] px-3 py-2 text-sm border-r cursor-pointer transition-colors relative transition-all",
                                 isActive
@@ -81,7 +93,7 @@ export function TabBar() {
                 return (
                     <div
                         key={id}
-                        onClick={() => setActiveTab(id)}
+                        onClick={() => handleTabClick(id)}
                         className={cn(
                             "group flex items-center min-w-[120px] max-w-[200px] px-3 py-2 text-sm border-r cursor-pointer transition-colors relative",
                             isActive

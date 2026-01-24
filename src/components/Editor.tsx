@@ -11,6 +11,7 @@ interface EditorProps {
 
 export interface EditorHandle {
     insertText: (text: string, cursorOffset?: number) => void;
+    wrapSelection: (prefix: string, suffix: string, placeholder?: string) => void;
     focus: () => void;
 }
 
@@ -28,6 +29,32 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(({ value, onChange, 
                 selection: { anchor: from + text.length - cursorOffset },
                 scrollIntoView: true,
             });
+            view.focus();
+        },
+        wrapSelection: (prefix: string, suffix: string, placeholder: string = 'text') => {
+            const view = editorRef.current?.view;
+            if (!view) return;
+
+            const { from, to } = view.state.selection.main;
+            const selectedText = view.state.sliceDoc(from, to);
+
+            if (from !== to) {
+                // If text is selected, wrap it
+                const newText = `${prefix}${selectedText}${suffix}`;
+                view.dispatch({
+                    changes: { from, to, insert: newText },
+                    selection: { anchor: from + prefix.length, head: from + prefix.length + selectedText.length },
+                    scrollIntoView: true,
+                });
+            } else {
+                // If no text is selected, insert placeholder
+                const newText = `${prefix}${placeholder}${suffix}`;
+                view.dispatch({
+                    changes: { from, to, insert: newText },
+                    selection: { anchor: from + prefix.length, head: from + prefix.length + placeholder.length },
+                    scrollIntoView: true,
+                });
+            }
             view.focus();
         },
         focus: () => {

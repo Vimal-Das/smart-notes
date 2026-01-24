@@ -9,6 +9,7 @@ import { cn } from '../lib/utils';
 
 interface EditorToolbarProps {
     onInsert: (text: string, cursorOffset?: number) => void;
+    onWrap: (prefix: string, suffix: string, placeholder?: string) => void;
     viewMode: 'edit' | 'preview';
     setViewMode: (mode: 'edit' | 'preview') => void;
     isSaving?: boolean;
@@ -18,6 +19,7 @@ interface EditorToolbarProps {
 
 export function EditorToolbar({
     onInsert,
+    onWrap,
     viewMode,
     setViewMode,
     isSaving,
@@ -37,9 +39,9 @@ export function EditorToolbar({
     );
 
     const tools = [
-        { icon: Bold, label: 'Bold', action: () => onInsert('**bold**', 2) },
-        { icon: Italic, label: 'Italic', action: () => onInsert('*italic*', 1) },
-        { icon: Strikethrough, label: 'Strikethrough', action: () => onInsert('~~strikethrough~~', 2) },
+        { icon: Bold, label: 'Bold', action: () => onWrap('**', '**', 'bold') },
+        { icon: Italic, label: 'Italic', action: () => onWrap('*', '*', 'italic') },
+        { icon: Strikethrough, label: 'Strikethrough', action: () => onWrap('~~', '~~', 'strikethrough') },
         { icon: Heading1, label: 'H1', action: () => onInsert('# ', 0) },
         { icon: Heading2, label: 'H2', action: () => onInsert('## ', 0) },
         { icon: Heading3, label: 'H3', action: () => onInsert('### ', 0) },
@@ -47,8 +49,8 @@ export function EditorToolbar({
         { icon: ListOrdered, label: 'Numbered List', action: () => onInsert('1. ', 0) },
         { icon: CheckSquare, label: 'Task List', action: () => onInsert('- [ ] ', 0) },
         { icon: Quote, label: 'Quote', action: () => onInsert('> ', 0) },
-        { icon: Code, label: 'Inline Code', action: () => onInsert('`code`', 1) },
-        { icon: SquareTerminal, label: 'Code Block', action: () => onInsert('```\ncode\n```', 4) },
+        { icon: Code, label: 'Inline Code', action: () => onWrap('`', '`', 'code') },
+        { icon: SquareTerminal, label: 'Code Block', action: () => onWrap('```\n', '\n```', 'code') },
         { icon: Minus, label: 'Horizontal Rule', action: () => onInsert('\n---\n', 0) },
         { icon: Table, label: 'Table', action: () => onInsert('\n| Header | Header |\n| :--- | :--- |\n| Cell | Cell |\n', 0) },
     ];

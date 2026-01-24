@@ -12,13 +12,18 @@ export function Layout() {
     const location = useLocation();
     const navigate = useNavigate();
 
-    // Close sidebar on mobile when navigating
+    // URL Synchronization: Keep tabs in sync with the current URL
     useEffect(() => {
-        setIsSidebarOpen(false);
-    }, [location.pathname]);
-
-    // ... (rest of the effects remain the same) ...
-    // Note: I'm keeping the effects as is, but ensuring they are correctly imported/wrapped if needed.
+        const path = location.pathname;
+        if (path.startsWith('/note/')) {
+            const id = path.split('/note/')[1];
+            if (id) openTab(id);
+        } else if (path === '/graph') {
+            openTab('graph');
+        } else if (path === '/search') {
+            openTab('search');
+        }
+    }, [location.pathname, openTab]);
 
     return (
         <div className="flex h-screen w-full bg-background text-foreground overflow-hidden">
